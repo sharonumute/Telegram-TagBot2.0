@@ -10,9 +10,5 @@ module.exports = {
             "asyncArrow": "always"
         }],
         "template-curly-spacing": [2, "always"]
-    },
-    "env": {
-        "commonjs": true,
-        "node": true,
     }
 };
