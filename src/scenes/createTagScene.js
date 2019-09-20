@@ -89,6 +89,18 @@ async function createTag(description, ctx) {
 
     ctx.session.user = res;
 
+    if (!res.status) {
+        await ctx.telegram.editMessageText(
+            ctx.chat.id,
+            ctx.scene.state.messageIdToEdit,
+            null,
+            ctx.session.user.statusMessage,
+            extra.markdown()
+        );
+
+        return;
+    }
+
     await ctx.telegram.editMessageText(
         ctx.chat.id,
         ctx.scene.state.messageIdToEdit,

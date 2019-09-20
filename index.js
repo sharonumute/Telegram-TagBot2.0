@@ -30,14 +30,6 @@ composer.on('inline_query', async ctx => {
     ctx.answerInlineQuery(result);
 });
 
-composer.command('delete', ({ reply }) => reply('Yo'));
-composer.command('edit', ({ reply }) => reply('Yo'));
-composer.command('add', ({ reply }) => reply('Yo'));
-composer.command('remove', ({ reply }) => reply('Yo'));
-composer.command('info', ({ reply }) => reply('Yo'));
-composer.command('all', ({ reply }) => reply('Yo'));
-composer.command('allmy', ({ reply }) => reply('Yo'));
-
 // Actions
 bot.action('CANCEL', ctx => cancel(ctx));
 

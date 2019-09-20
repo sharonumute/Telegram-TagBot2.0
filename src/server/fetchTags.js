@@ -36,6 +36,9 @@ async function returnAllTagMembershipsOf(groupTgID, userTgID) {
 
 /**
  * Fetch and return an array of all the tags in the specified group, that match the search term
+ * @param {string} groupTgID
+ * @param {string} searchTerm
+ * @returns {Array<Tag>}
  */
 async function returnAllTagsInGroupBySearch(groupTgID, searchTerm) {
     var tempTag = Tag;
@@ -57,6 +60,28 @@ async function returnAllTagsInGroupBySearch(groupTgID, searchTerm) {
     return [tempTag, tempTag2];
 }
 
+/**
+ * Return a specific tag
+ * @param {string} groupTgID
+ * @param {string} tagName
+ *  @param {string} userTgID
+ * @returns {Tag}
+ *
+ * TODO: Remove userTgID
+ */
+async function returnSpecificTag(groupTgID, tagName, userTgID) {
+    var tempTag = Tag;
+    tempTag.tagName = tagName;
+    tempTag.description = 'Arbitrary description';
+    tempTag.createdBy = userTgID;
+    tempTag.createdOn = Date.now().toString();
+    tempTag.membersCount = '10';
+    tempTag.groupTgID = groupTgID;
+
+    return tempTag;
+}
+
 module.exports.returnAllTagsInGroup = returnAllTagsInGroup;
 module.exports.returnAllTagMembershipsOf = returnAllTagMembershipsOf;
 module.exports.returnAllTagsInGroupBySearch = returnAllTagsInGroupBySearch;
+module.exports.returnSpecificTag = returnSpecificTag;
