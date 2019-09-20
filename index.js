@@ -1,53 +1,45 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT License.
-
 const dotenv = require('dotenv');
 const path = require('path');
-const restify = require('restify');
+const Telegraf = require('telegraf');
+const Composer = require('telegraf/composer');
+const session = require('./src/middleware/session');
+const scenes = require('./src/middleware/scenes');
+const { cancel } = require('./src/handlers/actions');
+const returnAllTagsInGroupInline = require('./src/handlers/inlineQuery');
+const consoleMenu = require('./src/handlers/console');
 
-// Import required bot services.
-// See https://aka.ms/bot-services to learn more about the different parts of a bot.
-const { BotFrameworkAdapter } = require('botbuilder');
-
-// This bot's main dialog.
-const { EchoBot } = require('./bot');
-
-// Import required bot configuration.
+// Bot Setup
 const ENV_FILE = path.join(__dirname, '.env');
 dotenv.config({ path: ENV_FILE });
 
-// Create HTTP server
-const server = restify.createServer();
-server.listen(process.env.port || process.env.PORT || 3978, () => {
-    console.log(`\n${ server.name } listening to ${ server.url }`);
-    console.log(`\nGet Bot Framework Emulator: https://aka.ms/botframework-emulator`);
-    console.log(`\nTo talk to your bot, open the emulator select "Open Bot"`);
+const bot = new Telegraf(process.env.TelegramBotToken);
+const composer = new Composer();
+
+// Middleware
+bot.use(composer);
+bot.use(session);
+bot.use(scenes);
+bot.use(consoleMenu.init());
+
+// None-Staged Commands and Features
+composer.on('inline_query', async ctx => {
+    const result = await returnAllTagsInGroupInline(
+        ctx.message.text,
+        ctx.chat.id
+    );
+    ctx.answerInlineQuery(result);
 });
 
-// Create adapter.
-// See https://aka.ms/about-bot-adapter to learn more about how bots work.
-const adapter = new BotFrameworkAdapter({
-    appId: process.env.MicrosoftAppId,
-    appPassword: process.env.MicrosoftAppPassword,
-    channelService: process.env.ChannelService,
-    openIdMetadata: process.env.BotOpenIdMetadata
-});
+composer.command('delete', ({ reply }) => reply('Yo'));
+composer.command('edit', ({ reply }) => reply('Yo'));
+composer.command('add', ({ reply }) => reply('Yo'));
+composer.command('remove', ({ reply }) => reply('Yo'));
+composer.command('info', ({ reply }) => reply('Yo'));
+composer.command('all', ({ reply }) => reply('Yo'));
+composer.command('allmy', ({ reply }) => reply('Yo'));
 
-// Catch-all for errors.
-adapter.onTurnError = async (context, error) => {
-    // This check writes out errors to console log .vs. app insights.
-    console.error(`\n [onTurnError]: ${ error }`);
-    // Send a message to the user
-    await context.sendActivity(`Oops. Something went wrong!`);
-};
+// Actions
+bot.action('CANCEL', ctx => cancel(ctx));
 
-// Create the main dialog.
-const bot = new EchoBot();
-
-// Listen for incoming requests.
-server.post('/api/messages', (req, res) => {
-    adapter.processActivity(req, res, async (context) => {
-        // Route to main dialog.
-        await bot.run(context);
-    });
-});
+// Start
+bot.startPolling();
