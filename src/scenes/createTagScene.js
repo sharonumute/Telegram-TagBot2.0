@@ -1,5 +1,6 @@
 const Telegraf = require('telegraf');
 const Scene = require('telegraf/scenes/base');
+const extra = require('telegraf/extra');
 const { isValidTagName } = require('../utils/inputValidation');
 const { commandParser } = require('../utils/inputValidation');
 const {
@@ -67,8 +68,9 @@ async function createTag(description, ctx) {
     await ctx.telegram.editMessageText(
         ctx.chat.id,
         ctx.scene.state.createPromptMessageId,
-        ctx.scene.state.createPromptMessageId,
-        promptDescriptionString(ctx.scene.state.tagName)
+        null,
+        promptDescriptionString(ctx.scene.state.tagName),
+        extra.markdown()
     );
 
     ctx.scene.state.messageIdToEdit = (await ctx.reply(
@@ -94,7 +96,8 @@ async function createTag(description, ctx) {
         postTagReplyFormatString(
             ctx.session.user.tag,
             ctx.session.user.statusMessage
-        )
+        ),
+        extra.markdown()
     );
 }
 

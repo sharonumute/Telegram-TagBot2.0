@@ -24,7 +24,7 @@ function postTagReplyFormatString(tagCreationPostDetails, statusMessage) {
     return `
 *Tag Name:* ${ tagCreationPostDetails.tagName }
 *Description:* ${ tagCreationPostDetails.description }
-*Craeted On:* ${ tagCreationPostDetails.createdOn }
+*Created On:* ${ tagCreationPostDetails.createdOn }
 *Created By:* ${ tagCreationPostDetails.createdBy }
 *Number of members:* ${ tagCreationPostDetails.membersCount }
 *GroupID:* ${ tagCreationPostDetails.groupTgID }
