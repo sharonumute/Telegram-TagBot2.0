@@ -89,7 +89,7 @@ function userMessageParse(map) {
 }
 
 module.exports.invalidTagNameString = invalidTagNameString;
-module.exports.postTagReplyFormatString = postTagEditReplyFormatString;
+module.exports.postTagEditReplyFormatString = postTagEditReplyFormatString;
 module.exports.promptDescriptionString = promptDescriptionString;
 module.exports.pleaseSpecifyNamesString = pleaseSpecifyNamesString;
 module.exports.failedToAddString = failedToAddString;

@@ -1,9 +1,9 @@
 {
-    "name": "echobot",
+    "name": "tagbot2.0",
     "version": "1.0.0",
-    "description": "Bot Builder v4 echo bot sample",
-    "author": "Microsoft",
-    "license": "MIT",
+    "description": "A Telegram Bot for Tagging Multiple People",
+    "author": "Sharon Umute",
+    "license": "",
     "main": "index.js",
     "scripts": {
         "start": "node ./index.js",
@@ -13,13 +13,13 @@
     },
     "repository": {
         "type": "git",
-        "url": "https://github.com"
+        "url": "https://github.com/sharonumute/Telegram-TagBot2.0"
     },
     "dependencies": {
         "dotenv": "^7.0.0",
         "telegraf": "^3.32.0",
         "telegraf-inline-menu": "^3.6.2",
-        "telegraf-session-redis": "^5.1.0"
+        "telegraf-session-local": "^1.0.2"
     },
     "devDependencies": {
         "eslint": "^5.13.0",

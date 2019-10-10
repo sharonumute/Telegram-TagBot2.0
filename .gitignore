@@ -1,3 +1,4 @@
 node_modules/
 *.js.map
 .env
+session_database.json

@@ -1,14 +1,9 @@
 const Telegraf = require('telegraf');
-const RedisSession = require('telegraf-session-redis');
-const { REDIS_HOST, REDIS_PORT, REDIS_PWD } = require('../../config');
+const LocalSession = require('telegraf-session-local');
 
 // From https://github.com/drvirtuozov/scrobblerBot
-const session = new RedisSession({
-    store: {
-        host: REDIS_HOST,
-        port: REDIS_PORT,
-        auth_pass: REDIS_PWD
-    },
+const session = new LocalSession({
+    database: 'session_database.json',
     getSessionKey(ctx) {
         return `${ ctx.from.id }${ ctx.chat.id }`;
     }
