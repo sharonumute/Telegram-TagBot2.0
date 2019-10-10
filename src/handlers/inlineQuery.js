@@ -1,5 +1,5 @@
 const inlineQueryResultArticle = require('../models/inlineQueryResultArticle');
-const { returnAllTagsInGroupBySearch } = require('../server/fetchTags');
+const { returnAllTagsInGroupBySearch } = require('../database/fetchTags');
 
 /**
  * Fetch and return an array of all the tags in the specified group
@@ -18,9 +18,9 @@ async function returnAllTagsInGroupInline(inlineQuery, groupTgID) {
     allTagsInGroup.forEach((tag, index) => {
         var inlineResult = inlineQueryResultArticle;
         inlineResult.id = index;
-        inlineResult.title = tag.name;
-        inlineResult.description = tag.description;
-        inlineResult.message_text = `@${ tag.name }`;
+        inlineResult.title = tag.Name;
+        inlineResult.description = tag.Description;
+        inlineResult.message_text = `@${ tag.Name }`;
 
         allTagsInGroupAsInlineResults.push(inlineResult);
     });

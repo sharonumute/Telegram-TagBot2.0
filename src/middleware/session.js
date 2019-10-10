@@ -32,12 +32,9 @@ module.exports = Telegraf.compose([
             ctx.session.state = {};
         }
 
-        // try to catch an error
         try {
             await next();
         } catch (e) {
-            // if there's an error pass it to the context state
-            // in order to session.middleware thought that it's "allright" and stored yourself
             ctx.state.error = e;
         }
     }

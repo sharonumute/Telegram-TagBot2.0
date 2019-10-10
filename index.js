@@ -4,8 +4,9 @@ const Telegraf = require('telegraf');
 const Composer = require('telegraf/composer');
 const session = require('./src/middleware/session');
 const scenes = require('./src/middleware/scenes');
+const logger = require('./src/middleware/logger');
 const { cancel } = require('./src/handlers/actions');
-const returnAllTagsInGroupInline = require('./src/handlers/inlineQuery');
+const manageChatMembers = require('./src/middleware/manageChatMembers');
 const consoleMenu = require('./src/handlers/console');
 
 // Bot Setup
@@ -19,19 +20,21 @@ const composer = new Composer();
 bot.use(composer);
 bot.use(session);
 bot.use(scenes);
+bot.use(logger);
+bot.use(manageChatMembers);
 bot.use(consoleMenu.init());
-
-// None-Staged Commands and Features
-composer.on('inline_query', async ctx => {
-    const result = await returnAllTagsInGroupInline(
-        ctx.message.text,
-        ctx.chat.id
-    );
-    ctx.answerInlineQuery(result);
-});
 
 // Actions
 bot.action('CANCEL', ctx => cancel(ctx));
+bot.action('PM_INFO', ctx => {
+    bot.telegram.sendMessage(ctx.from.id, ctx.session.pmMessage);
+    console.log(ctx.session.pmMessage);
+});
+
+// Error Handling
+bot.catch(e => {
+    console.log(e);
+});
 
 // Start
 bot.startPolling();

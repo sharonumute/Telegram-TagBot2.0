@@ -7,12 +7,11 @@ const Tag = require('../models/tag');
  */
 async function returnAllTagsInGroup(groupTgID) {
     var tempTag = Tag;
-    tempTag.tagName = 'pizzaTag';
-    tempTag.description = 'Pizza lovers';
-    tempTag.createdBy = '123456';
-    tempTag.createdOn = '2019-08-04';
-    tempTag.membersCount = '5';
-    tempTag.groupTgID = groupTgID;
+    tempTag.Name = 'pizzaTag';
+    tempTag.Description = 'Pizza lovers';
+    tempTag.CreatorUserID = '123456';
+    tempTag.CreationTimeStamp = '2019-08-04';
+    tempTag.GroupID = groupTgID;
 
     return [tempTag];
 }
@@ -25,12 +24,11 @@ async function returnAllTagsInGroup(groupTgID) {
  */
 async function returnAllTagMembershipsOf(groupTgID, userTgID) {
     var tempTag = Tag;
-    tempTag.tagName = 'pizzaTag';
-    tempTag.description = 'Pizza lovers';
-    tempTag.createdBy = userTgID;
-    tempTag.createdOn = '2019-08-04';
-    tempTag.membersCount = '5';
-    tempTag.groupTgID = groupTgID;
+    tempTag.Name = 'pizzaTag';
+    tempTag.Description = 'Pizza lovers';
+    tempTag.CreatorUserID = userTgID;
+    tempTag.CreationTimeStamp = '2019-08-04';
+    tempTag.GroupID = groupTgID;
     return [tempTag];
 }
 
@@ -42,20 +40,18 @@ async function returnAllTagMembershipsOf(groupTgID, userTgID) {
  */
 async function returnAllTagsInGroupBySearch(groupTgID, searchTerm) {
     var tempTag = Tag;
-    tempTag.tagName = `${ searchTerm }pizzaTag`;
-    tempTag.description = 'Pizza lovers';
-    tempTag.createdBy = '123456';
-    tempTag.createdOn = '2019-08-04';
-    tempTag.membersCount = '5';
-    tempTag.groupTgID = groupTgID;
+    tempTag.Name = `${ searchTerm }pizzaTag`;
+    tempTag.Description = 'Pizza lovers';
+    tempTag.CreatorUserID = '123456';
+    tempTag.CreationTimeStamp = '2019-08-04';
+    tempTag.GroupID = groupTgID;
 
     var tempTag2 = Tag;
-    tempTag2.tagName = 'pizzaTag';
-    tempTag2.description = `Pizza lovers ${ searchTerm }`;
-    tempTag2.createdBy = '123456';
-    tempTag2.createdOn = '2019-08-04';
-    tempTag2.membersCount = '5';
-    tempTag2.groupTgID = groupTgID;
+    tempTag2.Name = 'pizzaTag';
+    tempTag2.Description = `Pizza lovers ${ searchTerm }`;
+    tempTag2.CreatorUserID = '123456';
+    tempTag2.CreationTimeStamp = '2019-08-04';
+    tempTag2.GroupID = groupTgID;
 
     return [tempTag, tempTag2];
 }
@@ -71,12 +67,11 @@ async function returnAllTagsInGroupBySearch(groupTgID, searchTerm) {
  */
 async function returnSpecificTag(groupTgID, tagName, userTgID) {
     var tempTag = Tag;
-    tempTag.tagName = tagName;
-    tempTag.description = 'Arbitrary description';
-    tempTag.createdBy = userTgID;
-    tempTag.createdOn = Date.now().toString();
-    tempTag.membersCount = '10';
-    tempTag.groupTgID = groupTgID;
+    tempTag.Name = tagName;
+    tempTag.Description = 'Arbitrary description';
+    tempTag.CreatorUserID = userTgID;
+    tempTag.CreationTimeStamp = Date.now().toString();
+    tempTag.GroupID = groupTgID;
 
     return tempTag;
 }

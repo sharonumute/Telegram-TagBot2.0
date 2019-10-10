@@ -9,9 +9,9 @@ const UserStatus = require('../models/userStatus');
  * @param {Tag} tag
  * @returns {boolean}
  */
-async function canDelete(userTgID, userStatus, tag) {
+function canDelete(userTgID, userStatus, tag) {
     return (
-        userTgID === tag.createdBy ||
+        userTgID === tag.CreatorUserID ||
         userStatus === UserStatus.administrator ||
         userStatus === UserStatus.creator
     );
@@ -25,9 +25,9 @@ async function canDelete(userTgID, userStatus, tag) {
  * @param {string} userBeingRemovedTgId
  * @returns {boolean}
  */
-async function canRemove(userTgID, userStatus, tag, userBeingRemovedTgId) {
+function canRemove(userTgID, userStatus, tag, userBeingRemovedTgId) {
     return (
-        userTgID === tag.createdBy ||
+        userTgID === tag.CreatorUserID ||
         userStatus === UserStatus.administrator ||
         userStatus === UserStatus.creator ||
         userTgID === userBeingRemovedTgId
@@ -41,9 +41,9 @@ async function canRemove(userTgID, userStatus, tag, userBeingRemovedTgId) {
  * @param {Tag} tag
  * @returns {boolean}
  */
-async function canEdit(userTgID, userStatus, tag) {
+function canEdit(userTgID, userStatus, tag) {
     return (
-        userTgID === tag.createdBy ||
+        userTgID === tag.CreatorUserID ||
         userStatus === UserStatus.administrator ||
         userStatus === UserStatus.creator
     );

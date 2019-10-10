@@ -1,15 +1,15 @@
 // eslint-disable-next-line no-unused-vars
 const Tag = require('../models/tag');
-const tagPostSeverValue = require('../models/tagPostSeverValue');
+const TagPostSeverValue = require('../models/tagPostSeverValue');
 
 /**
  * Create the tag on the server
  * @param {Tag} userEnteredTagDetails
- * @returns {tagPostSeverValue}
+ * @returns {TagPostSeverValue}
  */
 
 async function createTagOnServer(userEnteredTagDetails) {
-    var tempReturnVal = tagPostSeverValue;
+    var tempReturnVal = TagPostSeverValue;
     tempReturnVal.tag = userEnteredTagDetails;
     tempReturnVal.status = true;
     tempReturnVal.statusMessage = 'Tag Added Successfully';

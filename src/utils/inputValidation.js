@@ -18,20 +18,46 @@ function isValidTagName(input) {
 
 /**
  * Parses comman input and returns only the arguments
- * @param {string} command
  * @param {string} input
- * @returns {string}
+ * @param {Array<{}>} entities
+ * @returns {{command:string, first_word:string, mentions:[]}}
  */
-function commandParser(command, input) {
-    const filterOutBot = input.split(`${ command }@${ TelegramBotUsername }`);
-    const filterOutCommand = filterOutBot[filterOutBot.length - 1].split(
-        `${ command }`
-    );
+function inputParser(input, entities) {
+    const output = {
+        command: '',
+        first_word: '',
+        mentions: []
+    };
+    for (var index in entities) {
+        const entity = entities[index];
+        switch (entity.type) {
+        case 'bot_command':
+            output.command = input.substring(
+                entity.offset,
+                entity.offset + entity.length
+            );
+            output.first_word = input
+                .substring(entity.offset + entity.length + 1)
+                .split(' ')[0]
+                .trim();
+            break;
+        case 'mention':
+            const mention = input.substring(
+                entity.offset,
+                entity.offset + entity.length
+            );
+            if (mention !== output.first_word) {
+                output.mentions.push(mention);
+            }
 
-    const args = filterOutCommand[filterOutCommand.length - 1].trim();
+            break;
+        default:
+            break;
+        }
+    }
 
-    return args;
+    return output;
 }
 
 module.exports.isValidTagName = isValidTagName;
-module.exports.commandParser = commandParser;
+module.exports.inputParser = inputParser;

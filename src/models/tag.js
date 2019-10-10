@@ -1,8 +1,8 @@
 module.exports = {
-    tagName: '',
-    description: '',
-    createdOn: '',
-    createdBy: '',
-    membersCount: '',
-    groupTgID: ''
+    Name: '',
+    Description: '',
+    CreationTimeStamp: '',
+    UpdateTimeStamp: '',
+    CreatorUserID: '',
+    GroupID: ''
 };

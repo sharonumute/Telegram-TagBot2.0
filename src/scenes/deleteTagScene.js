@@ -2,12 +2,12 @@ const Telegraf = require('telegraf');
 const Scene = require('telegraf/scenes/base');
 const extra = require('telegraf/extra');
 const { isValidTagName } = require('../utils/inputValidation');
-const { commandParser } = require('../utils/inputValidation');
+const { inputParser } = require('../utils/inputValidation');
 const {
     invalidTagNameString,
-    postTagReplyFormatString
-} = require('../strings/createTagStrings');
-const deleteTagOnServer = require('../server/deleteTag');
+    postTagEditReplyFormatString
+} = require('../strings/tagOperationStrings');
+const deleteTagOnServer = require('../database/deleteTag');
 
 /**
  * Scene played out when user wishes to delete a tag
@@ -15,15 +15,17 @@ const deleteTagOnServer = require('../server/deleteTag');
 const deleteTagScene = new Scene('delete_tag');
 
 deleteTagScene.enter(async ctx => {
-    const userArgument = commandParser('/delete', ctx.message.text);
+    const parts = inputParser(ctx.message.text, ctx.message.entities);
 
-    ctx.scene.state.tagName = userArgument;
+    ctx.scene.state.tagName = parts.first_word;
     ctx.scene.state.userID = ctx.message.from.id;
     ctx.scene.state.chatID = ctx.message.chat.id;
 
-    const isValid = isValidTagName(userArgument);
+    const isValid = isValidTagName(ctx.scene.state.tagName);
     if (!isValid) {
-        await ctx.replyWithMarkdown(invalidTagNameString(userArgument));
+        await ctx.replyWithMarkdown(
+            invalidTagNameString(ctx.scene.state.tagName)
+        );
         return;
     }
 
@@ -67,7 +69,7 @@ async function deleteTag(ctx) {
         ctx.chat.id,
         ctx.scene.state.messageIdToEdit,
         null,
-        postTagReplyFormatString(
+        postTagEditReplyFormatString(
             ctx.session.user.tag,
             ctx.session.user.statusMessage
         ),

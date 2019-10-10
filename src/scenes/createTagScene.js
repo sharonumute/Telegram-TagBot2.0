@@ -2,13 +2,13 @@ const Telegraf = require('telegraf');
 const Scene = require('telegraf/scenes/base');
 const extra = require('telegraf/extra');
 const { isValidTagName } = require('../utils/inputValidation');
-const { commandParser } = require('../utils/inputValidation');
+const { inputParser } = require('../utils/inputValidation');
 const {
     invalidTagNameString,
-    postTagReplyFormatString,
+    postTagEditReplyFormatString,
     promptDescriptionString
-} = require('../strings/createTagStrings');
-const createTagOnServer = require('../server/createTag');
+} = require('../strings/tagOperationStrings');
+const createTagOnServer = require('../database/createTag');
 
 /**
  * Scene played out when user wishes to create a tag
@@ -16,17 +16,19 @@ const createTagOnServer = require('../server/createTag');
 const createTagScene = new Scene('create_tag');
 
 createTagScene.enter(async ctx => {
-    const userArgument = commandParser('/create', ctx.message.text);
+    const parts = inputParser(ctx.message.text, ctx.message.entities);
 
-    ctx.scene.state.tagName = userArgument;
+    ctx.scene.state.tagName = parts.first_word;
 
-    const isValid = isValidTagName(userArgument);
+    const isValid = isValidTagName(ctx.scene.state.tagName);
     if (!isValid) {
-        await ctx.replyWithMarkdown(invalidTagNameString(userArgument));
+        await ctx.replyWithMarkdown(
+            invalidTagNameString(ctx.scene.state.tagName)
+        );
         return;
     }
 
-    const text = promptDescriptionString(userArgument);
+    const text = promptDescriptionString(ctx.scene.state.tagName);
 
     const extra = Telegraf.Markup.inlineKeyboard([
         Telegraf.Markup.callbackButton('Cancel', 'CANCEL'),
@@ -65,52 +67,56 @@ createTagScene.on('text', async ctx => {
 });
 
 async function createTag(description, ctx) {
-    await ctx.telegram.editMessageText(
-        ctx.chat.id,
-        ctx.scene.state.createPromptMessageId,
-        null,
-        promptDescriptionString(ctx.scene.state.tagName),
-        extra.markdown()
-    );
+    try {
+        await ctx.telegram.editMessageText(
+            ctx.chat.id,
+            ctx.scene.state.createPromptMessageId,
+            null,
+            promptDescriptionString(ctx.scene.state.tagName),
+            extra.markdown()
+        );
 
-    ctx.scene.state.messageIdToEdit = (await ctx.reply(
-        '<i>Creating Tag...</i>',
-        Telegraf.Extra.HTML().inReplyTo(ctx.scene.state.messageIdToReply)
-    )).message_id;
+        ctx.scene.state.messageIdToEdit = (await ctx.reply(
+            '<i>Creating Tag...</i>',
+            Telegraf.Extra.HTML().inReplyTo(ctx.scene.state.messageIdToReply)
+        )).message_id;
 
-    const res = await createTagOnServer({
-        tagName: ctx.scene.state.tagName,
-        description: description,
-        createdOn: Date.now().toString(),
-        createdBy: ctx.from.id,
-        membersCount: '0',
-        groupTgID: ctx.chat.id
-    });
+        const res = await createTagOnServer({
+            Name: ctx.scene.state.tagName,
+            Description: description,
+            CreationTimeStamp: Date.now().toString(),
+            CreatorUserID: ctx.from.id,
+            GroupID: ctx.chat.id
+        });
 
-    ctx.session.user = res;
+        ctx.session.user = res;
 
-    if (!res.status) {
+        if (!res.status) {
+            await ctx.telegram.editMessageText(
+                ctx.chat.id,
+                ctx.scene.state.messageIdToEdit,
+                null,
+                ctx.session.user.statusMessage,
+                extra.markdown()
+            );
+
+            return;
+        }
+
         await ctx.telegram.editMessageText(
             ctx.chat.id,
             ctx.scene.state.messageIdToEdit,
             null,
-            ctx.session.user.statusMessage,
+            postTagEditReplyFormatString(
+                ctx.session.user.tag,
+                ctx.session.user.statusMessage
+            ),
             extra.markdown()
         );
-
-        return;
+    } catch (error) {
+        ctx.reply('A Server error occured');
+        console.log(error);
     }
-
-    await ctx.telegram.editMessageText(
-        ctx.chat.id,
-        ctx.scene.state.messageIdToEdit,
-        null,
-        postTagReplyFormatString(
-            ctx.session.user.tag,
-            ctx.session.user.statusMessage
-        ),
-        extra.markdown()
-    );
 }
 
 createTagScene.action('SKIP', async ctx => {

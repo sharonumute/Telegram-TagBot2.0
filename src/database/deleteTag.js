@@ -1,5 +1,5 @@
-const tagPostSeverValue = require('../models/tagPostSeverValue');
-const { canDelete } = require('./permissions');
+const TagPostSeverValue = require('../models/tagPostSeverValue');
+const { canDelete } = require('../handlers/permissions');
 const { returnSpecificTag } = require('./fetchTags');
 
 /**
@@ -8,36 +8,26 @@ const { returnSpecificTag } = require('./fetchTags');
  * @param {string} groupTgID
  * @param {string} userTgID
  * @param {string} userStatus
- * @returns {tagPostSeverValue}
+ * @returns {TagPostSeverValue}
  */
 
 async function deleteTagOnServer(tagName, groupTgID, userTgID, userStatus) {
     const tag = await returnSpecificTag(groupTgID, tagName, userTgID);
-    const permToDelete = await canDelete(userTgID, userStatus, tag);
+    const permToDelete = canDelete(userTgID, userStatus, tag);
 
-    console.log(userStatus);
-    console.log(permToDelete);
-    console.log(userTgID);
-    console.log(tag.createdBy);
-
-    const returnVal = tagPostSeverValue;
+    const returnVal = TagPostSeverValue;
     returnVal.tag = tag;
-
-    var status = false;
-    var statusMessage = '';
 
     if (permToDelete) {
         // Delete tag and get back data
-        status = true;
-        statusMessage = 'Successfully Deleted Tag';
+        returnVal.status = true;
+        returnVal.statusMessage = 'Successfully Deleted Tag';
     } else {
-        status = false;
-        statusMessage =
+        returnVal.status = false;
+        returnVal.statusMessage =
             'Invalid Permissions. You must be the creator of the tag, or an admin, to delete it';
     }
 
-    returnVal.status = status;
-    returnVal.statusMessage = statusMessage;
     return returnVal;
 }
 
