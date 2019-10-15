@@ -1,6 +1,6 @@
 const TelegrafInlineMenu = require('telegraf-inline-menu');
 const Markup = require('telegraf/markup');
-const botHelp = require('../strings/helpString');
+const botHelp = require('../Strings/HelpStrings');
 
 const backButton = {
     doFunc: () => {},
@@ -8,13 +8,7 @@ const backButton = {
 };
 
 const closeScreen = new TelegrafInlineMenu('Good-bye!');
-const mainMenu = new TelegrafInlineMenu(
-    ctx => `
-Hi! Welcome to TagBot2.0
-"${ ctx.chat.title }" currently has ${ 20 } tags.
-What would you like to do?
-`
-);
+const mainMenu = new TelegrafInlineMenu(ctx => `Intro`);
 mainMenu.setCommand('console');
 
 const createScreen = new TelegrafInlineMenu('Create Screen');

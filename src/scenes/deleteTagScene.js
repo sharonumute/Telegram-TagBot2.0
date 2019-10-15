@@ -1,13 +1,13 @@
 const Telegraf = require('telegraf');
-const Scene = require('telegraf/scenes/base');
+const Scene = require('telegraf/Scenes/base');
 const extra = require('telegraf/extra');
-const { isValidTagName } = require('../utils/inputValidation');
-const { inputParser } = require('../utils/inputValidation');
+const { isValidTagName } = require('../Utils/InputValidation');
+const { inputParser } = require('../Utils/InputValidation');
 const {
     invalidTagNameString,
     postTagEditReplyFormatString
-} = require('../strings/tagOperationStrings');
-const deleteTagOnServer = require('../database/deleteTag');
+} = require('../Strings/TagOperationsStrings');
+const deleteTagOnServer = require('../Database/Server/DeleteTag');
 
 /**
  * Scene played out when user wishes to delete a tag

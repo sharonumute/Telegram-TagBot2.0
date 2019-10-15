@@ -1,4 +1,4 @@
-const Tag = require('../models/tag');
+const Tag = require('../../Models/Tag');
 
 /**
  * Fetch and return an array of all the tags in the specified group

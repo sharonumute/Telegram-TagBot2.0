@@ -2,12 +2,12 @@ const dotenv = require('dotenv');
 const path = require('path');
 const Telegraf = require('telegraf');
 const Composer = require('telegraf/composer');
-const session = require('./src/middleware/session');
-const scenes = require('./src/middleware/scenes');
-const logger = require('./src/middleware/logger');
-const { cancel } = require('./src/handlers/actions');
-const manageChatMembers = require('./src/middleware/manageChatMembers');
-const consoleMenu = require('./src/handlers/console');
+const Session = require('./src/Middleware/Session');
+const Scenes = require('./src/Middleware/Scenes');
+const Logger = require('./src/Middleware/Logger');
+const Membership = require('./src/Middleware/Membership');
+const { cancel } = require('./src/Handlers/Actions');
+const consoleMenu = require('./src/Handlers/Console');
 
 // Bot Setup
 const ENV_FILE = path.join(__dirname, '.env');
@@ -18,10 +18,10 @@ const composer = new Composer();
 
 // Middleware
 bot.use(composer);
-bot.use(session);
-bot.use(scenes);
-bot.use(logger);
-bot.use(manageChatMembers);
+bot.use(Session);
+bot.use(Scenes);
+bot.use(Logger);
+bot.use(Membership);
 bot.use(consoleMenu.init());
 
 // Actions

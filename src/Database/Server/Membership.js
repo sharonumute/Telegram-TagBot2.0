@@ -1,4 +1,4 @@
-const Member = require('../models/member');
+const Member = require('../../Models/Member');
 
 /**
  * Returns all the members of a chat from the cache

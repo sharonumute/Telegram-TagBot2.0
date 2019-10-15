@@ -1,5 +1,5 @@
 // eslint-disable-next-line no-unused-vars
-const Tag = require('../models/tag');
+const Tag = require('../Models/Tag');
 
 /**
  * Return a message addressing an invalid tag

@@ -1,18 +1,18 @@
-const TagPostSeverValue = require('../models/tagPostSeverValue');
-const { getChatMemberByUsername } = require('./chatMembers');
+const TagPostOperationValue = require('../../Models/TagPostOperationValue');
+const { getChatMemberByUsername } = require('./Membership');
 
 /**
  * Add a user to the specified tag
  * @param {string} tagName
  * @param {string} groupTgID
  * @param {string} username
- * @returns {TagPostSeverValue}
+ * @returns {TagPostOperationValue}
  */
 
-async function addUserOnServer(tagName, groupTgID, username) {
+async function AddUserOnServer(tagName, groupTgID, username) {
     const userID = (await getChatMemberByUsername(username)).UserID;
 
-    const returnVal = TagPostSeverValue;
+    const returnVal = TagPostOperationValue;
     returnVal.tag = {
         Name: 'something',
         Description: 'something',
@@ -27,4 +27,4 @@ async function addUserOnServer(tagName, groupTgID, username) {
     return returnVal;
 }
 
-module.exports = addUserOnServer;
+module.exports = AddUserOnServer;

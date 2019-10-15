@@ -1,10 +1,10 @@
 const Stage = require('telegraf/stage');
-const createTagScene = require('../scenes/createTagScene');
-const deleteTagScene = require('../scenes/deleteTagScene');
-const addUserScene = require('../scenes/addUserScene');
-const helpString = require('../strings/helpString');
+const createTagScene = require('../Scenes/CreateTagScene');
+const deleteTagScene = require('../Scenes/DeleteTagScene');
+const addUserScene = require('../Scenes/AddUserScene');
+const helpString = require('../Strings/HelpStrings');
 const { TelegramBotUsername } = require('../../config');
-const returnAllTagsInGroupInline = require('../handlers/inlineQuery');
+const returnAllTagsInGroupInline = require('../Handlers/InlineQuery');
 
 const stage = new Stage();
 

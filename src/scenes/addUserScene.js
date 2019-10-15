@@ -1,14 +1,14 @@
 const Telegraf = require('telegraf');
-const Scene = require('telegraf/scenes/base');
+const Scene = require('telegraf/Scenes/base');
 const extra = require('telegraf/extra');
-const { inputParser } = require('../utils/inputValidation');
+const { inputParser } = require('../Utils/InputValidation');
 const {
     pleaseSpecifyNamesString,
     failedToAddString,
     successOnAddString,
     userMessageParse
-} = require('../strings/tagOperationStrings');
-const addUserOnServer = require('../database/addUser');
+} = require('../Strings/TagOperationsStrings');
+const addUserOnServer = require('../Database/Server/AddUser');
 
 /**
  * Scene played out when user wishes to add a user to a tag

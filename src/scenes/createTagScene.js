@@ -1,14 +1,14 @@
 const Telegraf = require('telegraf');
-const Scene = require('telegraf/scenes/base');
+const Scene = require('telegraf/Scenes/base');
 const extra = require('telegraf/extra');
-const { isValidTagName } = require('../utils/inputValidation');
-const { inputParser } = require('../utils/inputValidation');
+const { isValidTagName } = require('../Utils/InputValidation');
+const { inputParser } = require('../Utils/InputValidation');
 const {
     invalidTagNameString,
     postTagEditReplyFormatString,
     promptDescriptionString
-} = require('../strings/tagOperationStrings');
-const createTagOnServer = require('../database/createTag');
+} = require('../Strings/TagOperationsStrings');
+const createTagOnServer = require('../Database/Server/CreateTag');
 
 /**
  * Scene played out when user wishes to create a tag

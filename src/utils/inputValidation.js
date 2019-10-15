@@ -1,5 +1,3 @@
-const { TelegramBotUsername } = require('../../config');
-
 /**
  * Determine if input is a valid tag name string
  * @param {string} input

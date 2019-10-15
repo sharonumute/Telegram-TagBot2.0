@@ -3,7 +3,7 @@ const {
     addChatMember,
     createChatMembersEntry,
     getChatMemberByUsername
-} = require('../database/chatMembers');
+} = require('../Database/Server/Membership');
 
 module.exports = async function(ctx, next) {
     const chatMembers = await getChatMembers(ctx.chat.id);

@@ -1,6 +1,6 @@
 // eslint-disable-next-line no-unused-vars
-const Tag = require('../models/tag');
-const UserStatus = require('../models/userStatus');
+const Tag = require('../Models/Tag');
+const UserStatus = require('../Models/UserStatus');
 
 /**
  * Check if the user can delete the tag

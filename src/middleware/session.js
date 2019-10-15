@@ -3,7 +3,7 @@ const LocalSession = require('telegraf-session-local');
 
 // From https://github.com/drvirtuozov/scrobblerBot
 const session = new LocalSession({
-    database: 'session_database.json',
+    database: 'src/Database/Local/session_database.json',
     getSessionKey(ctx) {
         return `${ ctx.from.id }${ ctx.chat.id }`;
     }

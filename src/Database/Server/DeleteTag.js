@@ -1,6 +1,6 @@
-const TagPostSeverValue = require('../models/tagPostSeverValue');
-const { canDelete } = require('../handlers/permissions');
-const { returnSpecificTag } = require('./fetchTags');
+const TagPostOperationValue = require('../../Models/TagPostOperationValue');
+const { canDelete } = require('../../Handlers/Permissions');
+const { returnSpecificTag } = require('./FetchTags');
 
 /**
  * Delete the tag on the server
@@ -8,14 +8,14 @@ const { returnSpecificTag } = require('./fetchTags');
  * @param {string} groupTgID
  * @param {string} userTgID
  * @param {string} userStatus
- * @returns {TagPostSeverValue}
+ * @returns {TagPostOperationValue}
  */
 
 async function deleteTagOnServer(tagName, groupTgID, userTgID, userStatus) {
     const tag = await returnSpecificTag(groupTgID, tagName, userTgID);
     const permToDelete = canDelete(userTgID, userStatus, tag);
 
-    const returnVal = TagPostSeverValue;
+    const returnVal = TagPostOperationValue;
     returnVal.tag = tag;
 
     if (permToDelete) {
