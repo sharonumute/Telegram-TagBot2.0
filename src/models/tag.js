@@ -1,4 +1,5 @@
 module.exports = {
+    TagID: '',
     Name: '',
     Description: '',
     CreationTimeStamp: '',

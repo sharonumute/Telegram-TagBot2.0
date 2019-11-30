@@ -4,19 +4,22 @@ const extra = require('telegraf/extra');
 const { inputParser } = require('../Utils/InputValidation');
 const {
     pleaseSpecifyNamesString,
-    failedToAddString,
-    successOnAddString,
+    failedToRemoveString,
+    successOnRemoveString,
     userMessageParse
 } = require('../Strings/TagOperationsStrings');
-const addUserOnServer = require('../Database/Server/AddUser');
+const removeUserOnServer = require('../Database/Server/RemoveUser');
 
-/** Scene played out when user wishes to add a user to a tag */
-const addUserScene = new Scene('add_user');
+/**
+ * Scene played out when user wishes to remove a user from a tag
+ */
+const removeUserScene = new Scene('remove_user');
 
-addUserScene.enter(async ctx => {
+removeUserScene.enter(async ctx => {
     ctx.scene.state.userMessageToReply = ctx.message.message_id;
 
     const parts = inputParser(ctx.message.text, ctx.message.entities);
+    const tagName = parts.first_word.replace('@', '');
     const usernames = parts.mentions;
 
     if (usernames.length <= 0) {
@@ -24,40 +27,39 @@ addUserScene.enter(async ctx => {
         return;
     }
 
-    const tagName = parts.first_word.replace('@', '');
+    await removeUser(tagName, usernames, ctx);
 
-    await addUser(tagName, usernames, ctx);
     await ctx.scene.leave();
 });
 
 /**
- * Add user and update scene
+ * Remove User and update scene
  * @param {string} tagName
  * @param {[]} users
  * @param {*} ctx
  */
-async function addUser(tagName, users, ctx) {
+async function removeUser(tagName, users, ctx) {
     try {
         ctx.scene.state.messageIdToEdit = (
             await ctx.reply(
-                '<i>Adding User[s]...</i>',
+                '<i>Removing User[s]...</i>',
                 Telegraf.Extra.HTML().inReplyTo(
                     ctx.scene.state.userMessageToReply
                 )
             )
         ).message_id;
 
-        const usersNotAdded = {};
+        const usersNotRemoved = {};
         users.forEach(async user => {
-            const res = await addUserOnServer(tagName, ctx.chat.id, user);
+            const res = await removeUserOnServer(tagName, ctx.chat.id, user);
 
             if (!res.status) {
-                usersNotAdded[user] = res.statusMessage;
+                usersNotRemoved[user] = res.statusMessage;
             }
         });
 
-        if (Object.keys(usersNotAdded).length > 0) {
-            ctx.session.pmMessage = userMessageParse(usersNotAdded);
+        if (Object.keys(usersNotRemoved).length > 0) {
+            ctx.session.pmMessage = userMessageParse(usersNotRemoved);
 
             const extra = Telegraf.Markup.inlineKeyboard([
                 Telegraf.Markup.callbackButton('Click for more info', 'PM_INFO')
@@ -67,10 +69,9 @@ async function addUser(tagName, users, ctx) {
                 ctx.chat.id,
                 ctx.scene.state.messageIdToEdit,
                 null,
-                failedToAddString(tagName),
+                failedToRemoveString(tagName),
                 extra
             );
-
             return;
         }
 
@@ -78,13 +79,13 @@ async function addUser(tagName, users, ctx) {
             ctx.chat.id,
             ctx.scene.state.messageIdToEdit,
             null,
-            successOnAddString(tagName),
+            successOnRemoveString(tagName),
             extra.markdown()
         );
     } catch (error) {
-        console.error(error);
         ctx.reply('A Server error occured');
+        console.log(error);
     }
 }
 
-module.exports = addUserScene;
+module.exports = removeUserScene;

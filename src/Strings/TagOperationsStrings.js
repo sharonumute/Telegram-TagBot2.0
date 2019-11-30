@@ -32,6 +32,30 @@ ${ statusMessage }`;
 }
 
 /**
+ * Prompt the user for a new name for the tag
+ * @param {string} tagName
+ * @returns {string}
+ */
+
+function promptNewNameString(tagName) {
+    return `Send a new name for the tag "${ tagName }"`;
+}
+
+/**
+ * Prompt the user for a new description
+ * @param {string} tagName
+ * @param {string} description
+ * @returns {string}
+ */
+
+function promptNewDescriptionString(tagName, description) {
+    return `
+Send a new description for "${ tagName }"
+
+Old description: ${ description }`;
+}
+
+/**
  * Prompt the user for a description
  * @param {string} tagName
  * @returns {string}
@@ -61,14 +85,28 @@ function failedToAddString(tagName) {
 Click the button below for more info`;
 }
 
+function failedToRemoveString(tagName) {
+    return `Done. Some users failed to be removed from ${ tagName }
+Click the button below for more info`;
+}
+
 /**
- * Success on add
+ * Success on adding users to a tag
  * @param {string} tagName
  * @returns {string}
  */
 
 function successOnAddString(tagName) {
     return `Done. Successfully added all users to ${ tagName }`;
+}
+
+/**
+ * Success on removing users from a tag
+ * @param {string} tagName
+ * @returns {string}
+ */
+function successOnRemoveString(tagName) {
+    return `Done. Successfully removed specified users from ${ tagName }`;
 }
 
 /**
@@ -88,10 +126,22 @@ function userMessageParse(map) {
     return finalMessage.join('\n');
 }
 
+/**
+ * Trying to access a tag that does not exist
+ */
+function nonexistantTagNameString() {
+    return `This tag does not exist.`;
+}
+
+module.exports.promptNewNameString = promptNewNameString;
+module.exports.nonexistantTagNameString = nonexistantTagNameString;
 module.exports.invalidTagNameString = invalidTagNameString;
 module.exports.postTagEditReplyFormatString = postTagEditReplyFormatString;
 module.exports.promptDescriptionString = promptDescriptionString;
 module.exports.pleaseSpecifyNamesString = pleaseSpecifyNamesString;
 module.exports.failedToAddString = failedToAddString;
+module.exports.failedToRemoveString = failedToRemoveString;
 module.exports.successOnAddString = successOnAddString;
+module.exports.successOnRemoveString = successOnRemoveString;
 module.exports.userMessageParse = userMessageParse;
+module.exports.promptNewDescriptionString = promptNewDescriptionString;

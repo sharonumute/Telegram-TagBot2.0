@@ -15,14 +15,15 @@ async function returnAllTagsInGroupInline(inlineQuery, groupTgID) {
         groupTgID,
         inlineQuery
     );
+
     var allTagsInGroupAsInlineResults = [];
 
-    allTagsInGroup.forEach((tag, index) => {
+    allTagsInGroup.forEach((tagStatus, index) => {
         var inlineResult = InlineQueryResultArticle;
         inlineResult.id = index;
-        inlineResult.title = tag.Name;
-        inlineResult.description = tag.Description;
-        inlineResult.message_text = `@${ tag.Name }`;
+        inlineResult.title = tagStatus.tag.Name;
+        inlineResult.description = tagStatus.tag.Description;
+        inlineResult.message_text = `@${ tagStatus.tag.Name }`;
 
         allTagsInGroupAsInlineResults.push(inlineResult);
     });

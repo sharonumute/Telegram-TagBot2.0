@@ -9,19 +9,16 @@ const {
     promptDescriptionString
 } = require('../Strings/TagOperationsStrings');
 const createTagOnServer = require('../Database/Server/CreateTag');
+const { clearAndSetActiveActionButtons } = require('../Utils/SceneHelpers');
 
-/**
- * Scene played out when user wishes to create a tag
- */
+/** Scene played out when user wishes to create a tag */
 const createTagScene = new Scene('create_tag');
 
 createTagScene.enter(async ctx => {
     const parts = inputParser(ctx.message.text, ctx.message.entities);
-
     ctx.scene.state.tagName = parts.first_word;
 
-    const isValid = isValidTagName(ctx.scene.state.tagName);
-    if (!isValid) {
+    if (!isValidTagName(ctx.scene.state.tagName)) {
         await ctx.replyWithMarkdown(
             invalidTagNameString(ctx.scene.state.tagName)
         );
@@ -29,35 +26,41 @@ createTagScene.enter(async ctx => {
     }
 
     const text = promptDescriptionString(ctx.scene.state.tagName);
-
     const extra = Telegraf.Markup.inlineKeyboard([
         Telegraf.Markup.callbackButton('Cancel', 'CANCEL'),
         Telegraf.Markup.callbackButton('Skip', 'SKIP')
     ]).extra();
 
-    var createPromptMessage;
+    var promptMessage;
+    promptMessage = await ctx.replyWithMarkdown(text, extra);
+
     if (ctx.callbackQuery) {
-        createPromptMessage = await ctx.editMessageText(text, extra);
+        promptMessage = await ctx.editMessageText(text, extra);
     }
 
-    createPromptMessage = await ctx.replyWithMarkdown(text, extra);
-
-    ctx.scene.state.createPromptMessageId = createPromptMessage.message_id;
+    ctx.scene.state.promptMessageId = promptMessage.message_id;
+    ctx.scene.state.lastMessageWithButtonsId = ctx.scene.state.promptMessageId;
+    ctx.scene.state.lastMessageWithButtonsString = text;
 });
 
 createTagScene.on('text', async ctx => {
-    ctx.scene.state.messageIdToReply = ctx.message.message_id;
-    let description = ctx.message.text;
+    ctx.scene.state.userMessageToReply = ctx.message.message_id;
+    const description = ctx.message.text;
 
     if (!description) {
-        await ctx.replyWithMarkdown(
-            promptDescriptionString(ctx.scene.state.tagName),
-            Telegraf.Markup.inlineKeyboard([
-                Telegraf.Markup.callbackButton('Cancel', 'CANCEL'),
-                Telegraf.Markup.callbackButton('Skip', 'SKIP')
-            ]).extra()
+        clearAndSetActiveActionButtons(
+            ctx,
+            ctx.scene.state.lastMessageWithButtonsId,
+            ctx.scene.state.lastMessageWithButtonsString,
+            await ctx.replyWithMarkdown(
+                promptDescriptionString(ctx.scene.state.tagName),
+                Telegraf.Markup.inlineKeyboard([
+                    Telegraf.Markup.callbackButton('Cancel', 'CANCEL'),
+                    Telegraf.Markup.callbackButton('Skip', 'SKIP')
+                ]).extra()
+            ),
+            promptDescriptionString(ctx.scene.state.tagName)
         );
-
         return;
     }
 
@@ -66,19 +69,24 @@ createTagScene.on('text', async ctx => {
     await ctx.scene.leave();
 });
 
+/**
+ * Create tag and update Scene
+ * @param {string} description
+ * @param {*} ctx
+ */
 async function createTag(description, ctx) {
     try {
-        await ctx.telegram.editMessageText(
-            ctx.chat.id,
-            ctx.scene.state.createPromptMessageId,
+        clearAndSetActiveActionButtons(
+            ctx,
+            ctx.scene.state.lastMessageWithButtonsId,
+            ctx.scene.state.lastMessageWithButtonsString,
             null,
-            promptDescriptionString(ctx.scene.state.tagName),
-            extra.markdown()
+            null
         );
 
         ctx.scene.state.messageIdToEdit = (await ctx.reply(
             '<i>Creating Tag...</i>',
-            Telegraf.Extra.HTML().inReplyTo(ctx.scene.state.messageIdToReply)
+            Telegraf.Extra.HTML().inReplyTo(ctx.scene.state.userMessageToReply)
         )).message_id;
 
         const res = await createTagOnServer({
@@ -90,16 +98,14 @@ async function createTag(description, ctx) {
         });
 
         ctx.session.user = res;
-
         if (!res.status) {
             await ctx.telegram.editMessageText(
                 ctx.chat.id,
                 ctx.scene.state.messageIdToEdit,
                 null,
-                ctx.session.user.statusMessage,
+                res.statusMessage,
                 extra.markdown()
             );
-
             return;
         }
 
@@ -108,14 +114,14 @@ async function createTag(description, ctx) {
             ctx.scene.state.messageIdToEdit,
             null,
             postTagEditReplyFormatString(
-                ctx.session.user.tag,
-                ctx.session.user.statusMessage
+                res.tag,
+                res.statusMessage
             ),
             extra.markdown()
         );
     } catch (error) {
+        console.error(error);
         ctx.reply('A Server error occured');
-        console.log(error);
     }
 }
 
