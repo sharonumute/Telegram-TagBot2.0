@@ -58,8 +58,7 @@ createTagScene.on('text', async ctx => {
                     Telegraf.Markup.callbackButton('Cancel', 'CANCEL'),
                     Telegraf.Markup.callbackButton('Skip', 'SKIP')
                 ]).extra()
-            ),
-            promptDescriptionString(ctx.scene.state.tagName)
+            )
         );
         return;
     }
@@ -80,7 +79,6 @@ async function createTag(description, ctx) {
             ctx,
             ctx.scene.state.lastMessageWithButtonsId,
             ctx.scene.state.lastMessageWithButtonsString,
-            null,
             null
         );
 

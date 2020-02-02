@@ -7,7 +7,6 @@ const Scenes = require('./src/Middleware/Scenes');
 const Logger = require('./src/Middleware/Logger');
 const Membership = require('./src/Middleware/Membership');
 const { cancel } = require('./src/Handlers/Actions');
-const consoleMenu = require('./src/Handlers/Console');
 
 // Bot Setup
 const ENV_FILE = path.join(__dirname, '.env');
@@ -22,7 +21,6 @@ bot.use(Session);
 bot.use(Scenes);
 bot.use(Logger);
 bot.use(Membership);
-bot.use(consoleMenu.init());
 
 // Actions
 bot.action('CANCEL', ctx => cancel(ctx));

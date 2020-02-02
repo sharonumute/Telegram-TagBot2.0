@@ -13,8 +13,7 @@ async function clearAndSetActiveActionButtons(
     ctx,
     lastMessageWithButtonsId,
     lastMessageWithButtonsString,
-    newActiveButtons,
-    newString
+    newActiveButtons
 ) {
     await ctx.telegram.editMessageText(
         ctx.chat.id,
@@ -26,10 +25,7 @@ async function clearAndSetActiveActionButtons(
 
     if (newActiveButtons) {
         ctx.scene.state.lastMessageWithButtonsId = newActiveButtons.message_id;
-    }
-
-    if (newString) {
-        ctx.scene.state.lastMessageWithButtonsString = newString;
+        ctx.scene.state.lastMessageWithButtonsString = newActiveButtons.text;
     }
 }
 

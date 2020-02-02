@@ -78,9 +78,6 @@ editTagScene.on('text', async ctx => {
                         Telegraf.Markup.callbackButton('Cancel', 'CANCEL'),
                         Telegraf.Markup.callbackButton('Skip', 'SKIP')
                     ]).extra()
-                ),
-                promptNewNameString(
-                    ctx.scene.state.tagName
                 )
             );
             return;
@@ -103,10 +100,6 @@ editTagScene.on('text', async ctx => {
                     Telegraf.Markup.callbackButton('Cancel', 'CANCEL'),
                     Telegraf.Markup.callbackButton('Skip', 'SKIP')
                 ]).extra()
-            ),
-            promptNewDescriptionString(
-                ctx.scene.state.tagName,
-                ctx.scene.state.description
             )
         );
     } else {
@@ -127,10 +120,6 @@ editTagScene.on('text', async ctx => {
                         Telegraf.Markup.callbackButton('Cancel', 'CANCEL'),
                         Telegraf.Markup.callbackButton('Skip', 'SKIP')
                     ]).extra()
-                ),
-                promptNewDescriptionString(
-                    ctx.scene.state.tagName,
-                    ctx.scene.state.description
                 )
             );
             return;
@@ -152,7 +141,6 @@ async function editTag(ctx) {
             ctx,
             ctx.scene.state.lastMessageWithButtonsId,
             ctx.scene.state.lastMessageWithButtonsString,
-            null,
             null
         );
 
@@ -218,10 +206,6 @@ editTagScene.action('SKIP', async ctx => {
                     Telegraf.Markup.callbackButton('Cancel', 'CANCEL'),
                     Telegraf.Markup.callbackButton('Skip', 'SKIP')
                 ]).extra()
-            ),
-            promptNewDescriptionString(
-                ctx.scene.state.tagName,
-                ctx.scene.state.description
             )
         );
 
